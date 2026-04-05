@@ -2,20 +2,20 @@
 <html>
 <head>
 <title>Doon Packaging Solutions</title>
+
 <style>
 body{
 font-family:Arial;
+margin:0;
 background:#0f172a;
 color:white;
-margin:0;
-padding:0;
 }
 
 header{
 background:#020617;
 padding:20px;
 text-align:center;
-font-size:24px;
+font-size:26px;
 font-weight:bold;
 color:#38bdf8;
 }
@@ -25,11 +25,11 @@ padding:20px;
 }
 
 .section{
-margin-bottom:30px;
-padding:20px;
 background:#111827;
+padding:20px;
+margin-bottom:20px;
 border-radius:10px;
-box-shadow:0 0 10px rgba(0,0,0,0.5);
+box-shadow:0 0 10px rgba(0,0,0,0.4);
 }
 
 h2{
@@ -39,6 +39,7 @@ color:#38bdf8;
 .product{
 display:flex;
 justify-content:space-between;
+align-items:center;
 margin:8px 0;
 padding:8px;
 background:#1f2937;
@@ -48,39 +49,35 @@ border-radius:6px;
 button{
 background:#38bdf8;
 border:none;
-padding:5px 10px;
-cursor:pointer;
+padding:6px 10px;
 border-radius:5px;
+cursor:pointer;
 color:black;
 }
 
 input{
-padding:8px;
-margin:5px 0;
 width:100%;
+padding:10px;
+margin:5px 0;
 border-radius:5px;
 border:none;
 }
 
-#cart{
-margin-top:10px;
-}
-
 .total{
 font-size:20px;
-margin-top:10px;
 color:#22c55e;
+margin-top:10px;
 }
 
 .order-btn{
 background:#22c55e;
-padding:10px;
+padding:12px;
 width:100%;
 font-size:16px;
 margin-top:10px;
 }
-
 </style>
+
 </head>
 
 <body>
@@ -114,7 +111,7 @@ Doon Packaging Solutions
 
 <script>
 
-let products=[
+let products = [
 {name:"3 Ply Brown Boxes",price:95},
 {name:"7 Ply Corrugated Boxes",price:175},
 {name:"Cardboard Boxes",price:140},
@@ -141,22 +138,25 @@ let products=[
 {name:"Corrugated Rolls",price:30}
 ];
 
-let cart={};
+let cart = {};
 
 function loadProducts(){
-let div=document.getElementById("products");
+let div = document.getElementById("products");
+
 products.forEach(p=>{
-let el=document.createElement("div");
-el.className="product";
-el.innerHTML=`
+let item = document.createElement("div");
+item.className="product";
+
+item.innerHTML=`
 <span>${p.name} - ₹${p.price}</span>
-<button onclick="add('${p.name}',${p.price})">Add</button>
+<button onclick="addToCart('${p.name}',${p.price})">Add</button>
 `;
-div.appendChild(el);
+
+div.appendChild(item);
 });
 }
 
-function add(name,price){
+function addToCart(name,price){
 if(cart[name]){
 cart[name].qty++;
 }else{
@@ -166,53 +166,58 @@ renderCart();
 }
 
 function renderCart(){
-let div=document.getElementById("cart");
+let div = document.getElementById("cart");
 div.innerHTML="";
-let total=0;
+
+let total = 0;
 
 for(let i in cart){
-let item=cart[i];
-total+=item.price*item.qty;
+let item = cart[i];
+total += item.price * item.qty;
 
-let el=document.createElement("div");
+let el = document.createElement("div");
 el.className="product";
+
 el.innerHTML=`
 <span>${i} x ${item.qty}</span>
-<span>₹${item.price*item.qty}</span>
+<span>₹${item.price * item.qty}</span>
 `;
+
 div.appendChild(el);
 }
 
-document.getElementById("total").innerText="Total: ₹"+total;
+document.getElementById("total").innerText = "Total: ₹" + total;
 return total;
 }
 
 function order(){
-let name=document.getElementById("name").value;
-let phone=document.getElementById("phone").value;
+
+let name = document.getElementById("name").value;
+let phone = document.getElementById("phone").value;
 
 if(!name || !phone){
 alert("Please fill details");
 return;
 }
 
-let total=renderCart();
+let total = renderCart();
 
-let msg="🧾 *ORDER BILL*%0A%0A";
-msg+="👤 Name: "+name+"%0A";
-msg+="📞 Phone: "+phone+"%0A%0A";
-msg+="🛒 Items:%0A";
+let msg = "🧾 *ORDER BILL*%0A%0A";
+msg += "👤 Name: " + name + "%0A";
+msg += "📞 Phone: " + phone + "%0A%0A";
+msg += "🛒 Items:%0A";
 
 for(let i in cart){
-msg+="- "+i+" x "+cart[i].qty+" = ₹"+(cart[i].price*cart[i].qty)+"%0A";
+msg += "- " + i + " x " + cart[i].qty + " = ₹" + (cart[i].price * cart[i].qty) + "%0A";
 }
 
-msg+="%0A💰 Total: ₹"+total+"%0A";
-msg+="%0APlease confirm my order.";
+msg += "%0A💰 Total: ₹" + total + "%0A";
+msg += "%0APlease confirm my order.";
 
-let url="https://wa.me/917017670100?text="+msg;
+let url = "https://wa.me/917017670100?text=" + msg;
 
 window.open(url);
+
 }
 
 loadProducts();
